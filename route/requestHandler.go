@@ -1,17 +1,20 @@
 package route
 
 import (
-	"github.com/gorilla/mux"
-	"log"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-/*
-https://tutorialedge.net/golang/creating-restful-api-with-golang/
-*/
 func HandleRequests() {
-	// creates a new instance of a mux router
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", homePage)
-	log.Fatal(http.ListenAndServe(":10000", myRouter))
+	router := gin.Default()
+	router.GET("/", homePage)
+	router.GET("/chorecategories", returnAllChoreCategories)
+	router.GET("/chorecategories/:id", returnChoreCategory)
+	router.GET("/chores", returnAllChores)
+	router.GET("/chores/:id", returnChore)
+	router.POST("/chores", createChore)
+	router.GET("/users", returnAllUsers)
+	router.GET("/users/:id", returnUser)
+	router.POST("/users", createUser)
+	router.Run()
+
 }

@@ -9,8 +9,9 @@ type ChoreCategory struct {
 
 type Chore struct {
 	gorm.Model
-	Name          string
-	ChoreCategory ChoreCategory
+	Name            string
+	ChoreCategory   ChoreCategory
+	ChoreCategoryId int
 }
 
 type User struct {
