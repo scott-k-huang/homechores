@@ -11,11 +11,11 @@ import (
 func FindUser(userId uint) (*model.User, error) {
 	db := config.DB
 	user := model.User{}
-	tx := db.First(user, userId)
+	tx := db.First(&user, userId)
 	if tx.Error != nil {
 		return nil, tx.Error
 	} else {
-		log.Println("Found User :", user.LastName, user.FirstName)
+		log.Println("Found User :", user.ID)
 		return &user, nil
 	}
 }
