@@ -22,6 +22,16 @@ func CreateUser(firstName string, lastName string, email string) (*model.User, e
 	}
 }
 
+func UpdateUser(user model.User) (*model.User, error) {
+	db := config.DB
+	tx := db.Save(user)
+	if tx.Error != nil {
+		return nil, tx.Error
+	} else {
+		return &user, nil
+	}
+}
+
 func CreateChoreCategory(name string) (*model.ChoreCategory, error) {
 	db := config.DB
 	var choreCategory model.ChoreCategory
@@ -35,13 +45,13 @@ func CreateChoreCategory(name string) (*model.ChoreCategory, error) {
 	}
 }
 
-func UpdateChore(chore model.Chore) (*model.Chore, error) {
+func UpdateChoreCategory(choreCategory model.ChoreCategory) (*model.ChoreCategory, error) {
 	db := config.DB
-	tx := db.Save(chore)
+	tx := db.Save(choreCategory)
 	if tx.Error != nil {
 		return nil, tx.Error
 	} else {
-		return &chore, nil
+		return &choreCategory, nil
 	}
 }
 
@@ -55,6 +65,16 @@ func CreateChore(name string, choreCategory model.ChoreCategory) (*model.Chore, 
 		return nil, tx.Error
 	} else {
 		log.Println("Newly created Chore ID: ", chore.ID)
+		return &chore, nil
+	}
+}
+
+func UpdateChore(chore model.Chore) (*model.Chore, error) {
+	db := config.DB
+	tx := db.Save(chore)
+	if tx.Error != nil {
+		return nil, tx.Error
+	} else {
 		return &chore, nil
 	}
 }

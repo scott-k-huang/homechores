@@ -22,6 +22,25 @@ func createUser(c *gin.Context) {
 	}
 }
 
+func updateUser(c *gin.Context) {
+	var userRequest api_model.User
+	c.BindJSON(&userRequest)
+	userModel, err := dao.FindUser(userRequest.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	} else {
+		userModel.LastName = userModel.LastName
+		userModel.FirstName = userModel.FirstName
+		userModel.Email = userModel.Email
+		userModel, err := dao.UpdateUser(*userModel)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		} else {
+			c.JSON(http.StatusOK, util.TransformUserToApiModel(*userModel))
+		}
+	}
+}
+
 func returnAllUsers(c *gin.Context) {
 	users, err := dao.FindUsers()
 	if err != nil {
@@ -47,7 +66,7 @@ func returnUser(c *gin.Context) {
 	}
 }
 
-func saveChore(c *gin.Context) {
+func updateChore(c *gin.Context) {
 	var chore api_model.Chore
 	c.BindJSON(chore)
 	choreCategory, err := dao.FindChoreCategory(chore.ChoreCategory.ID)
@@ -95,6 +114,17 @@ func returnChore(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusOK, util.ChoreToAPIModel(*chore))
 		}
+	}
+}
+
+func createChoreCategory(c *gin.Context) {
+	var choreCategoryRequest api_model.CreateChoreCategoryRequest
+	c.BindJSON(&choreCategoryRequest)
+	choreCategoryModel, err := dao.CreateChoreCategory(choreCategoryRequest.Name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	} else {
+		c.JSON(http.StatusOK, util.ChoreCategoryToAPIModel(*choreCategoryModel))
 	}
 }
 

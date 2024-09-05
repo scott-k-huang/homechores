@@ -1,6 +1,8 @@
 package api_model
 
-import "time"
+import (
+	"time"
+)
 
 type Base struct {
 	ID        uint      `json:"id"`
@@ -10,6 +12,10 @@ type Base struct {
 
 type ChoreCategory struct {
 	Base
+	CreateChoreCategoryRequest
+}
+
+type CreateChoreCategoryRequest struct {
 	Name string `json:"name"`
 }
 
@@ -17,6 +23,11 @@ type Chore struct {
 	Base
 	Name          string `json:"name"`
 	ChoreCategory ChoreCategory
+}
+
+type CreateChoreRequest struct {
+	Name            string `json:"name'"`
+	ChoreCategoryID uint   `json:"choreCategoryID"`
 }
 
 type User struct {
