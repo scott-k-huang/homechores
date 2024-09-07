@@ -71,7 +71,7 @@ func FindChore(choreId uint) (*model.Chore, error) {
 func FindChores() (*[]model.Chore, error) {
 	db := config.DB
 	var chores []model.Chore
-	tx := db.Find(&chores)
+	tx := db.Preload("ChoreCategory").Find(&chores)
 	if tx.Error != nil {
 		return nil, tx.Error
 	} else {
