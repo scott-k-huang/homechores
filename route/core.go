@@ -13,30 +13,38 @@ import (
 
 func createUser(c *gin.Context) {
 	var userRequest api_model.CreateUserRequest
-	c.BindJSON(&userRequest)
-	userModel, err := dao.CreateUser(userRequest.FirstName, userRequest.LastName, userRequest.Email)
+	err := c.BindJSON(&userRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		c.JSON(http.StatusOK, util.TransformUserToApiModel(*userModel))
+		userModel, err := dao.CreateUser(userRequest.FirstName, userRequest.LastName, userRequest.Email)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		} else {
+			c.JSON(http.StatusOK, util.TransformUserToApiModel(*userModel))
+		}
 	}
 }
 
 func updateUser(c *gin.Context) {
 	var userRequest api_model.User
-	c.BindJSON(&userRequest)
-	userModel, err := dao.FindUser(userRequest.ID)
+	err := c.BindJSON(&userRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		userModel.LastName = userModel.LastName
-		userModel.FirstName = userModel.FirstName
-		userModel.Email = userModel.Email
-		userModel, err := dao.UpdateUser(*userModel)
+		userModel, err := dao.FindUser(userRequest.ID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 		} else {
-			c.JSON(http.StatusOK, util.TransformUserToApiModel(*userModel))
+			userModel.LastName = userModel.LastName
+			userModel.FirstName = userModel.FirstName
+			userModel.Email = userModel.Email
+			userModel, err := dao.UpdateUser(*userModel)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, err)
+			} else {
+				c.JSON(http.StatusOK, util.TransformUserToApiModel(*userModel))
+			}
 		}
 	}
 }
@@ -46,7 +54,7 @@ func returnAllUsers(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		c.JSON(http.StatusOK, users)
+		c.JSON(http.StatusOK, util.TransformUsersToApiModel(*users))
 	}
 }
 
@@ -68,26 +76,32 @@ func returnUser(c *gin.Context) {
 
 func updateChore(c *gin.Context) {
 	var chore api_model.Chore
-	c.BindJSON(chore)
-	choreCategory, err := dao.FindChoreCategory(chore.ChoreCategory.ID)
+	err := c.BindJSON(chore)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		dao.CreateChore(chore.Name, *choreCategory)
+		choreCategory, err := dao.FindChoreCategory(chore.ChoreCategory.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		} else {
+			dao.CreateChore(chore.Name, *choreCategory)
+		}
 	}
 }
 
 func createChore(c *gin.Context) {
-	name := c.PostForm("name")
-	choreCategoryId, err := strconv.Atoi(c.PostForm("choreCategoryId"))
+	var choreRequest api_model.CreateChoreRequest
+	err := c.BindJSON(&choreRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		chore, err := service.CreateChore(name, uint(choreCategoryId))
+		chore, err := service.CreateChore(choreRequest.Name, choreRequest.ChoreCategoryID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
+			println("error creating chore")
+			println(err)
 		} else {
-			c.JSON(http.StatusOK, chore)
+			c.JSON(http.StatusOK, util.ChoreToAPIModel(*chore))
 		}
 	}
 
@@ -119,12 +133,16 @@ func returnChore(c *gin.Context) {
 
 func createChoreCategory(c *gin.Context) {
 	var choreCategoryRequest api_model.CreateChoreCategoryRequest
-	c.BindJSON(&choreCategoryRequest)
-	choreCategoryModel, err := dao.CreateChoreCategory(choreCategoryRequest.Name)
+	err := c.BindJSON(&choreCategoryRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		c.JSON(http.StatusOK, util.ChoreCategoryToAPIModel(*choreCategoryModel))
+		choreCategoryModel, err := dao.CreateChoreCategory(choreCategoryRequest.Name)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		} else {
+			c.JSON(http.StatusOK, util.ChoreCategoryToAPIModel(*choreCategoryModel))
+		}
 	}
 }
 

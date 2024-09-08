@@ -26,7 +26,7 @@ type Chore struct {
 }
 
 type CreateChoreRequest struct {
-	Name            string `json:"name'"`
+	Name            string `json:"name"`
 	ChoreCategoryID uint   `json:"choreCategoryID"`
 }
 
