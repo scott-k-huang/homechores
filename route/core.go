@@ -1,14 +1,15 @@
 package route
 
 import (
+	"log"
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	api_model "github.com/scott-k-huang/homechores/api-model"
 	"github.com/scott-k-huang/homechores/dao"
 	"github.com/scott-k-huang/homechores/service"
 	"github.com/scott-k-huang/homechores/util"
-	"log"
-	"net/http"
-	"strconv"
 )
 
 func createUser(c *gin.Context) {
@@ -75,16 +76,23 @@ func returnUser(c *gin.Context) {
 }
 
 func updateChore(c *gin.Context) {
-	var chore api_model.Chore
-	err := c.BindJSON(chore)
+	var choreRequest api_model.Chore
+	err := c.BindJSON(choreRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	} else {
-		choreCategory, err := dao.FindChoreCategory(chore.ChoreCategory.ID)
+		chore, err := dao.FindChore(choreRequest.ID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 		} else {
-			dao.CreateChore(chore.Name, *choreCategory)
+			chore.Name = choreRequest.Name
+			chore.ChoreCategory = util.ChoreCategoryToModel(choreRequest.ChoreCategory)
+			chore, err := dao.UpdateChore(*chore)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, err)
+			} else {
+				c.JSON(http.StatusOK, util.ChoreToAPIModel(*chore))
+			}
 		}
 	}
 }

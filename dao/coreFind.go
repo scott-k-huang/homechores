@@ -2,10 +2,11 @@ package dao
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/scott-k-huang/homechores/config"
 	"github.com/scott-k-huang/homechores/model"
 	"gorm.io/gorm/clause"
-	"log"
 )
 
 func FindUser(userId uint) (*model.User, error) {

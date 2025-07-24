@@ -13,6 +13,7 @@ func HandleRequests() {
 	router.GET("/chores", returnAllChores)
 	router.GET("/chores/:id", returnChore)
 	router.POST("/chores", createChore)
+	router.PUT("/chores/:id", updateChore)
 	router.GET("/users", returnAllUsers)
 	router.GET("/users/:id", returnUser)
 	router.POST("/users", createUser)

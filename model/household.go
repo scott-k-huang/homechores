@@ -1,8 +1,9 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Household struct {
@@ -27,7 +28,6 @@ type HouseholdAdhocTask struct {
 	ChoreCategory                     ChoreCategory
 	ChoreCategoryId                   int `gorm:"column:chore_category_id"`
 	FractionalPointsEnabled           bool
-	HouseholdMemberPointsCollection   HouseholdMemberPointsCollection
 	HouseholdMemberPointsCollectionId int `gorm:"column:points_collection_id"`
 }
 
@@ -55,15 +55,13 @@ type HouseholdChoreAssignment struct {
 
 type HouseholdChoreAssignmentComplete struct {
 	gorm.Model
-	HouseholdChoreAssignment          HouseholdChoreAssignment
-	HouseholdChoreAssignmentId        int `gorm:"column:household_chore_assignment_id"`
-	Rating                            float32
-	Notes                             string
-	VerifiedBy                        HouseholdMember
-	VerifiedById                      int `gorm:"column:verified_by"`
-	FractionalPointsEnabled           bool
-	HouseholdMemberPointsCollection   HouseholdMemberPointsCollection
-	HouseholdMemberPointsCollectionId int `gorm:"column:points_collection_id"`
+	HouseholdChoreAssignment   HouseholdChoreAssignment
+	HouseholdChoreAssignmentId int `gorm:"column:household_chore_assignment_id"`
+	Rating                     float32
+	Notes                      string
+	VerifiedBy                 HouseholdMember
+	VerifiedById               int `gorm:"column:verified_by"`
+	FractionalPointsEnabled    bool
 }
 
 type HouseholdChoreFrequency struct {
@@ -89,15 +87,4 @@ type HouseholdMember struct {
 	FractionalPointsEnabled bool
 	User                    User
 	UserId                  int `gorm:"column:user_id"`
-}
-
-type HouseholdMemberPointsCollection struct {
-	gorm.Model
-	Collector           HouseholdMember
-	CollectorId         int `gorm:"column:collector_id"`
-	Approver            HouseholdMember
-	ApproverId          int `gorm:"column:approver_id"`
-	ApproverNotes       string
-	CollectorReflection string
-	PointsCollected     float64
 }

@@ -1,15 +1,16 @@
 package dao
 
 import (
+	"log"
+
 	"github.com/scott-k-huang/homechores/config"
 	"github.com/scott-k-huang/homechores/model"
-	"log"
 )
 
 func CreateUser(firstName string, lastName string, email string) (*model.User, error) {
 	db := config.DB
 	var user model.User
-	log.Println("here is the user %v", user)
+	log.Printf("here is the user %v", user)
 	user.FirstName = firstName
 	user.LastName = lastName
 	user.Email = email
